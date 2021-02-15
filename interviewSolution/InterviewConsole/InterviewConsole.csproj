@@ -24,10 +24,6 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Logs\" />
-  </ItemGroup>
-
   <Import Project="..\Common\Common.projitems" Label="Shared" />
 
 </Project>
