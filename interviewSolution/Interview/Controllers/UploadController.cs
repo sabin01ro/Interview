@@ -1,5 +1,6 @@
 ﻿using Common.Common;
 using Common.Interfaces;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -16,10 +17,12 @@ namespace Interview.Controllers
     {
 
         IPutCsvDataToDabase _putCsvDataToDabase = new PutCsvDataToDabase();
+
+        [EnableCors("AllowOrigin")]
         [HttpPost]
         [Route("[action]")]
-        public Task<HttpResponseMessage> Upload([FromForm] IFormFile body)
-        {
+        public IActionResult Upload([FromForm] IFormFile body)
+        {          
             try
             {
                 using (var reader = new StreamReader(body.OpenReadStream()))
@@ -27,14 +30,25 @@ namespace Interview.Controllers
                     _putCsvDataToDabase.PutCsvDataToDatabase(reader);
                 }
                 var response = new HttpResponseMessage(HttpStatusCode.OK);
+                response.Content = new StringContent("File uploaded succesfuly");
 
-                return Task.FromResult(response);
+                return Json(new
+                {
+                    response = response,
+                    data = response.Content,
+                    messege = "File uploaded succesfuly"
+                });
             }
             catch (Exception ex)
             {
                 var response = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 response.Content = new StringContent(ex.Message);
-                return Task.FromResult(response);
+                return Json(new
+                {
+                    response = response,
+                    data = response.Content,
+                    messege = ex.Message
+                });
             }
         }
     }

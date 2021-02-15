@@ -16,7 +16,10 @@ class Fileupload extends React.Component {
         const formData = new FormData();
         formData.append('body', this.state.file);
 
-        return axios.post(url, formData);
+        return axios.post(url, formData,{}).then(res => { // then print response status
+
+    alert(res.data.messege)
+ })
     }
     setFile(e) {
         this.setState({ file: e.target.files[0] });
